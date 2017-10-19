@@ -18,42 +18,42 @@ import java.util.List;
 public class UserMealsUtil {
     public static void main(String[] args) {
         List<UserMeal> mealList = Arrays.asList(
-                new UserMeal(LocalDateTime.of(2015, Month.MAY, 30,10,0), "Завтрак", 500),
-                new UserMeal(LocalDateTime.of(2015, Month.MAY, 30,13,0), "Обед", 1000),
-                new UserMeal(LocalDateTime.of(2015, Month.MAY, 30,20,0), "Ужин", 500),
-                new UserMeal(LocalDateTime.of(2015, Month.MAY, 31,10,0), "Завтрак", 1000),
-                new UserMeal(LocalDateTime.of(2015, Month.MAY, 31,13,0), "Обед", 500),
-                new UserMeal(LocalDateTime.of(2015, Month.MAY, 31,20,0), "Ужин", 510)
+                new UserMeal(LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "Завтрак", 500),
+                new UserMeal(LocalDateTime.of(2015, Month.MAY, 30, 13, 0), "Обед", 1000),
+                new UserMeal(LocalDateTime.of(2015, Month.MAY, 30, 20, 0), "Ужин", 500),
+                new UserMeal(LocalDateTime.of(2015, Month.MAY, 31, 10, 0), "Завтрак", 1000),
+                new UserMeal(LocalDateTime.of(2015, Month.MAY, 31, 13, 0), "Обед", 500),
+                new UserMeal(LocalDateTime.of(2015, Month.MAY, 31, 20, 0), "Ужин", 510)
         );
-        List<UserMealWithExceed> mealWithExceedList= getFilteredWithExceeded(mealList, LocalTime.of(7, 0), LocalTime.of(21,0), 2000);
-        for (UserMealWithExceed u : mealWithExceedList){
+        List<UserMealWithExceed> mealWithExceedList = getFilteredWithExceeded(mealList, LocalTime.of(7, 0), LocalTime.of(21, 0), 2000);
+        for (UserMealWithExceed u : mealWithExceedList) {
             System.out.println(u);
         }
 //        .toLocalDate();
 //        .toLocalTime();
     }
 
-    public static List<UserMealWithExceed>  getFilteredWithExceeded(List<UserMeal> mealList, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
+    public static List<UserMealWithExceed> getFilteredWithExceeded(List<UserMeal> mealList, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
         List<UserMealWithExceed> mealWithExceedList = new ArrayList<>();
-        int day=0;
-        int coloies=0;
-        for(int i =0;i<mealList.size();i++){
-            coloies+=mealList.get(i).getCalories();
+        for (int i = 0; i < mealList.size(); i++) {
+            int day;
+            int coloies = 0;
+            int year;
+            year = mealList.get(i).getDateTime().getYear();
+            coloies += mealList.get(i).getCalories();
             day = mealList.get(i).getDateTime().getDayOfYear();
 
-            System.out.println(day);
-            if (TimeUtil.isBetween(LocalTime.from(mealList.get(i).getDateTime()),startTime,endTime))
-                mealWithExceedList.add(new UserMealWithExceed(mealList.get(i).getDateTime(), mealList.get(i).getDescription(), mealList.get(i).getCalories(), coloies>caloriesPerDay));
-            try {
-                if (mealList.get(i + 1).getDateTime().getDayOfYear() != day) {
-                    coloies = 0;
+            for (int j = 0; j < mealList.size(); j++) {
+                if (i == j)
+                    continue;
+                if (day == mealList.get(j).getDateTime().getDayOfYear() && year == mealList.get(j).getDateTime().getYear()) {
+                    coloies += mealList.get(j).getCalories();
                 }
             }
-            catch (ArrayIndexOutOfBoundsException e){
-                System.out.println("Exception e");
-            }
+                if (TimeUtil.isBetween(LocalTime.from(mealList.get(i).getDateTime()), startTime, endTime))
+                    mealWithExceedList.add(new UserMealWithExceed(mealList.get(i).getDateTime(), mealList.get(i).getDescription(), mealList.get(i).getCalories(), coloies > caloriesPerDay));
+
         }
-        //System.out.println("TODO return filtered list with correctly exceeded field");
         return mealWithExceedList;
     }
 }
