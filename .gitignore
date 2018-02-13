@@ -4,6 +4,7 @@ target
 *.iml
 log
 *.patch
+lesson03.md
 
 
 
