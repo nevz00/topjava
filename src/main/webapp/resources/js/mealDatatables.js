@@ -26,7 +26,7 @@ $(function () {
             {
                 "data": "dateTime",
                 "render": function (date, type, row) {
-                    if (type==="display"){
+                    if (type==='display'){
                         return date.replace('T', ' ').substr(0,16);
                     }
                     return date;
@@ -56,9 +56,7 @@ $(function () {
             ]
         ],
         "createdRow": function (row, data, dataIndex) {
-            if (!data.enabled) {
-                $(row).addClass("disabled");
-            }
+            $(row).addClass(data.exceed ? 'exceeded' : 'normal');
         },
         "initComplete": makeEditable
     });
